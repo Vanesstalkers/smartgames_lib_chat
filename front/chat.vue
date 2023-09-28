@@ -224,7 +224,7 @@ export default {
       if (this.isPersonalChannel) {
         api.action
           .call({
-            path: 'lib.chat.api.loadPersonal',
+            path: 'chat.api.loadPersonal',
             args: [{ channelUserId: this.activeChannel }],
           })
           .catch(prettyAlert);
@@ -238,7 +238,7 @@ export default {
         if (this.isPersonalChannel) {
           api.action
             .call({
-              path: 'lib.chat.api.loadPersonal',
+              path: 'chat.api.loadPersonal',
               args: [{ channelUserId: this.activeChannel }],
             })
             .catch(prettyAlert);
@@ -255,7 +255,7 @@ export default {
         this.$set(this.newPersonalChatMap, user.id, { name: user.name });
         api.action
           .call({
-            path: 'lib.chat.api.openPersonal',
+            path: 'chat.api.openPersonal',
             args: [{ id: user.id, name: user.name }],
           })
           .then((data) => {
@@ -274,7 +274,7 @@ export default {
     saveName() {
       api.action
         .call({
-          path: 'lib.user.api.update',
+          path: 'user.api.update',
           args: [{ name: this.userName }],
         })
         .catch(prettyAlert);
@@ -283,7 +283,7 @@ export default {
       this.disableSendMsgBtn = 5;
       api.action
         .call({
-          path: this.isPersonalChannel ? 'lib.chat.api.updatePersonal' : 'lib.chat.api.update',
+          path: this.isPersonalChannel ? 'chat.api.updatePersonal' : 'chat.api.update',
           args: [{ text: this.chatMsgText, channel: this.activeChannel }],
         })
         .then((data) => {
