@@ -9,7 +9,7 @@ async (context, { id: channelUserId, name }) => {
   user.set({ personalChatMap: { [channelUserId]: { name } } });
   await user.saveChanges('chat.api.openPersonal');
 
-  processOwner = { f: 'chat.api.openPersonal' };
+  const processOwner = { f: 'chat.api.openPersonal' };
   await lib.store.broadcaster.publishData(
     `user-${channelUserId}`,
     {
