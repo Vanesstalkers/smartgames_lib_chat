@@ -15,7 +15,7 @@
       const { _id } = await db.mongo.insertOne('chat', chatEvent);
       chatEvent._id = _id.toString();
       this.set({ chat: { [_id]: chatEvent } });
-      if (!preventSaveChanges) await this.saveChanges('updateChat');
+      if (!preventSaveChanges) await this.saveChanges();
       return { chatEventId: chatEvent._id };
     },
   }),
