@@ -280,18 +280,28 @@ export default {
     },
     sendChatMsg() {
       this.disableSendMsgBtn = 5;
-      api.action
-        .call({
-          path: this.isPersonalChannel ? 'chat.api.updatePersonal' : 'chat.api.update',
-          args: [{ text: this.chatMsgText, channel: this.activeChannel }],
-        })
-        .then((data) => {
-          this.chatMsgText = '';
-          this.restoreMsgBtn();
-        })
-        .catch((err) => {
-          this.restoreMsgBtn();
-        });
+
+      const actionData = {
+        path: this.isPersonalChannel ? 'chat.api.updatePersonal' : 'chat.api.update',
+        args: [{ text: this.chatMsgText, channel: this.activeChannel }],
+      };
+
+      const { inGame, isPersonalChannel } = this.activeChannelData;
+      if (window.parent !== window && (inGame || isPersonalChannel)) {
+        window.parent.postMessage(actionData, '*');
+        this.chatMsgText = '';
+        this.restoreMsgBtn();
+      } else {
+        api.action
+          .call(actionData)
+          .then((data) => {
+            this.chatMsgText = '';
+            this.restoreMsgBtn();
+          })
+          .catch((err) => {
+            this.restoreMsgBtn();
+          });
+      }
       this.lastViewTime = Date.now() + 1000;
     },
     restoreMsgBtn() {
