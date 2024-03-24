@@ -15,7 +15,7 @@ async (context, { text, channel }) => {
   chatEvent._id = _id.toString();
 
   user.broadcastToSessions({
-    type: 'db/smartUpdated',
+    type: 'updateStore',
     data: {
       user: {
         [userId]: {
@@ -28,7 +28,7 @@ async (context, { text, channel }) => {
   const userOnline = await db.redis.hget('users', channel, { json: true });
   if (userOnline) {
     await lib.store.broadcaster.publishAction(`user-${channel}`, 'broadcastToSessions', {
-      type: 'db/smartUpdated',
+      type: 'updateStore',
       data: { user: { [channel]: { personalChatMap: { [userId]: { items: { [_id]: chatEvent } } } } } },
     });
   } else {

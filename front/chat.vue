@@ -132,7 +132,7 @@ export default {
         {
           personal: true,
           online: this.lobby.users?.[id]?.online,
-          name: channel.name,
+          name: this.lobby.users?.[id]?.name || channel.name,
           users: {
             [this.state.currentUser]: { name: this.userData.name, online: true },
             [id]: this.lobby.users?.[id] || {},
@@ -148,23 +148,22 @@ export default {
       ]);
     },
     chatChannels() {
-      return (
-        Object.entries(this.channels)
-          .concat(this.personalChatList)
-          .map(([id, channel]) => ({
-            id,
-            online: true, // все каналы по дефолту online, но персональные могут быть offline
-            ...channel,
-          })) || []
-      ).sort((a, b) =>
-        !a.personal && b.personal
-          ? -1 // глобальные каналы вверху списка
-          : a.inGame && !b.inGame
-          ? -1 // игровые каналы вверху списка
-          : a.online && !b.online
-          ? -1 // онлайн каналы вверху списка
-          : 1
-      );
+      return Object.entries(this.channels)
+        .concat(this.personalChatList)
+        .map(([id, channel]) => ({
+          id,
+          online: true, // все каналы по дефолту online, но персональные могут быть offline
+          ...channel,
+        }))
+        .sort((a, b) =>
+          !a.personal && b.personal
+            ? -1 // глобальные каналы вверху списка
+            : a.inGame && !b.inGame
+            ? -1 // игровые каналы вверху списка
+            : a.online && !b.online
+            ? -1 // онлайн каналы вверху списка
+            : 1
+        );
     },
     activeChannel() {
       return this.selectedChannel || this.defActiveChannel;
