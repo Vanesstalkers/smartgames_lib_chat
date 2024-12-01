@@ -365,6 +365,7 @@ export default {
   color: #f4e205;
   background: black;
   border: 1px solid #f4e205;
+  cursor: pointer;
 
   &.tutorial-active {
     box-shadow: 0 0 20px 10px #f4e205;
@@ -389,7 +390,8 @@ export default {
     cursor: pointer;
   }
   > span:not([iam]):hover {
-    opacity: 0.7;
+    background: #f4e205;
+    color: black;
   }
   > span[iam] {
     background: #f4e205;
