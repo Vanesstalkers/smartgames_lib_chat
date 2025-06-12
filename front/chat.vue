@@ -137,7 +137,7 @@ export default {
         {
           personal: true,
           online: this.lobby.users?.[id]?.online,
-          name: channel.name,
+          name: this.lobby.users?.[id]?.name || channel.name,
           users: {
             [this.state.currentUser]: { name: this.userData.name, online: true },
             [id]: this.lobby.users?.[id] || {},
@@ -153,23 +153,22 @@ export default {
       ]);
     },
     chatChannels() {
-      return (
-        Object.entries(this.channels)
-          .concat(this.personalChatList)
-          .map(([id, channel]) => ({
-            id,
-            online: true, // все каналы по дефолту online, но персональные могут быть offline
-            ...channel,
-          })) || []
-      ).sort((a, b) =>
-        !a.personal && b.personal
-          ? -1 // глобальные каналы вверху списка
-          : a.inGame && !b.inGame
-          ? -1 // игровые каналы вверху списка
-          : a.online && !b.online
-          ? -1 // онлайн каналы вверху списка
-          : 1
-      );
+      return Object.entries(this.channels)
+        .concat(this.personalChatList)
+        .map(([id, channel]) => ({
+          id,
+          online: true, // все каналы по дефолту online, но персональные могут быть offline
+          ...channel,
+        }))
+        .sort((a, b) =>
+          !a.personal && b.personal
+            ? -1 // глобальные каналы вверху списка
+            : a.inGame && !b.inGame
+            ? -1 // игровые каналы вверху списка
+            : a.online && !b.online
+            ? -1 // онлайн каналы вверху списка
+            : 1
+        );
     },
     activeChannel() {
       return this.selectedChannel || this.defActiveChannel;
@@ -286,18 +285,28 @@ export default {
     },
     sendChatMsg() {
       this.disableSendMsgBtn = 5;
-      api.action
-        .call({
-          path: this.isPersonalChannel ? 'chat.api.updatePersonal' : 'chat.api.update',
-          args: [{ text: this.chatMsgText, channel: this.activeChannel }],
-        })
-        .then((data) => {
-          this.chatMsgText = '';
-          this.restoreMsgBtn();
-        })
-        .catch((err) => {
-          this.restoreMsgBtn();
-        });
+
+      const actionData = {
+        path: this.isPersonalChannel ? 'chat.api.updatePersonal' : 'chat.api.update',
+        args: [{ text: this.chatMsgText, channel: this.activeChannel }],
+      };
+
+      const { inGame, isPersonalChannel } = this.activeChannelData;
+      if (window.parent !== window && (inGame || isPersonalChannel)) {
+        window.parent.postMessage(actionData, '*');
+        this.chatMsgText = '';
+        this.restoreMsgBtn();
+      } else {
+        api.action
+          .call(actionData)
+          .then((data) => {
+            this.chatMsgText = '';
+            this.restoreMsgBtn();
+          })
+          .catch((err) => {
+            this.restoreMsgBtn();
+          });
+      }
       this.lastViewTime = Date.now() + 1000;
     },
     restoreMsgBtn() {
@@ -368,6 +377,7 @@ export default {
   color: #f4e205;
   background: black;
   border: 1px solid #f4e205;
+  cursor: pointer;
 
   &.tutorial-active {
     box-shadow: 0 0 20px 10px #f4e205;
@@ -392,7 +402,8 @@ export default {
     cursor: pointer;
   }
   > span:not([iam]):hover {
-    opacity: 0.7;
+    background: #f4e205;
+    color: black;
   }
   > span[iam] {
     background: #f4e205;
