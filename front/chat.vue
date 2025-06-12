@@ -1,7 +1,7 @@
 <template>
   <div class="chat-form">
     <div class="chat-header">
-      <select class="chat-channels" ref="selectChannel" @change="setActiveChat($event)">
+      <select class="chat-channels" ref="selectChannel" v-model="selectedChannel" @change="setActiveChat($event)">
         <option v-for="channel of chatChannels" :key="channel.id" :value="channel.id">
           <span v-if="channel.unreadItems">
             <span v-if="channel.unreadItems <= 9">
@@ -50,10 +50,15 @@
       <div v-if="!userData.name" class="chat-controls-alert">
         <div class="info">Укажите свое имя, чтобы начать писать в чат</div>
         <div class="input-group">
-          <input v-model="userName" /><button @click="saveName" class="chat-btn">Сохранить</button>
+          <input v-model="userName" @keydown.enter="saveName" />
+          <button @click="saveName" class="chat-btn">Сохранить</button>
         </div>
       </div>
-      <textarea v-model="chatMsgText" rows="3" />
+      <textarea 
+        v-model="chatMsgText" 
+        rows="3" 
+        @keydown.enter.prevent="handleEnterPress"
+      />
       <button :disabled="disableSendMsgBtn > 0" @click="sendChatMsg" class="chat-btn">
         <span v-if="disableSendMsgBtn > 0"> {{ disableSendMsgBtn }} </span>
         <font-awesome-icon v-if="disableSendMsgBtn === 0" :icon="['fas', 'share']" />
@@ -309,8 +314,15 @@ export default {
       count += this.personalUnreadItems;
       this.hasUnreadMessages(count);
     },
+    handleEnterPress(event) {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        this.sendChatMsg();
+      }
+    },
   },
-  async created() {},
+  async created() {
+    this.selectedChannel = this.defActiveChannel;
+  },
   async mounted() {
     // !!! добавить event key Enter
   },
