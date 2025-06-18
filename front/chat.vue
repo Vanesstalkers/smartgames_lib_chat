@@ -54,11 +54,7 @@
           <button @click="saveName" class="chat-btn">Сохранить</button>
         </div>
       </div>
-      <textarea 
-        v-model="chatMsgText" 
-        rows="3" 
-        @keydown.enter.prevent="handleEnterPress"
-      />
+      <textarea v-model="chatMsgText" rows="3" @keydown.enter.prevent="handleEnterPress" />
       <button :disabled="disableSendMsgBtn > 0" @click="sendChatMsg" class="chat-btn">
         <span v-if="disableSendMsgBtn > 0"> {{ disableSendMsgBtn }} </span>
         <font-awesome-icon v-if="disableSendMsgBtn === 0" :icon="['fas', 'share']" />
@@ -164,10 +160,10 @@ export default {
           !a.personal && b.personal
             ? -1 // глобальные каналы вверху списка
             : a.inGame && !b.inGame
-            ? -1 // игровые каналы вверху списка
-            : a.online && !b.online
-            ? -1 // онлайн каналы вверху списка
-            : 1
+              ? -1 // игровые каналы вверху списка
+              : a.online && !b.online
+                ? -1 // онлайн каналы вверху списка
+                : 1
         );
     },
     activeChannel() {
@@ -335,7 +331,7 @@ export default {
   async mounted() {
     // !!! добавить event key Enter
   },
-  async beforeDestroy() {},
+  async beforeDestroy() { },
 };
 </script>
 <style src="vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css" />
@@ -348,6 +344,7 @@ export default {
   padding: 4px 8px;
   cursor: pointer;
 }
+
 .chat-btn:hover,
 .chat-btn[disabled='disabled'] {
   background: black !important;
@@ -358,18 +355,20 @@ export default {
   display: flex;
   flex-wrap: wrap;
   overflow: hidden !important;
+
+  .tutorial-active {
+    box-shadow: 0 0 20px 10px white;
+  }
 }
+
 .chat-header {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
   border-bottom: 2px solid #f4e205;
   padding: 10px;
-
-  &.tutorial-active {
-    box-shadow: inset 0 0 20px 10px #f4e205;
-  }
 }
+
 .chat-channels {
   width: 50%;
   max-width: 200px;
@@ -378,34 +377,35 @@ export default {
   background: black;
   border: 1px solid #f4e205;
   cursor: pointer;
-
-  &.tutorial-active {
-    box-shadow: 0 0 20px 10px #f4e205;
-  }
 }
+
 .user-list-label {
   width: 50%;
   color: #f4e205;
   text-align: right;
   margin-bottom: 8px;
 }
+
 .user-list {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row-reverse;
-  > span {
+
+  >span {
     border: 1px solid #f4e205;
     border-radius: 2px;
     padding: 2px 4px;
     margin: 2px;
     cursor: pointer;
   }
-  > span:not([iam]):hover {
+
+  >span:not([iam]):hover {
     background: #f4e205;
     color: black;
   }
-  > span[iam] {
+
+  >span[iam] {
     background: #f4e205;
     color: black;
     cursor: default;
@@ -433,17 +433,20 @@ export default {
   padding-left: 10px;
   padding-right: 10px;
 }
+
 .msg-list .msg {
   padding: 8px;
   text-align: left;
 }
-.msg-list .msg > .header {
+
+.msg-list .msg>.header {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   font-size: 12px;
 }
-.msg-list .msg > .header > b {
+
+.msg-list .msg>.header>b {
   color: #f4e205;
 }
 
@@ -451,7 +454,8 @@ export default {
   padding: 8px;
   color: #f4e205;
 }
-.msg-list .event > span {
+
+.msg-list .event>span {
   color: white;
 }
 
@@ -463,6 +467,7 @@ export default {
   bottom: 0px;
   box-shadow: inset 0px -20px 20px 20px black;
 }
+
 .chat-controls-alert {
   position: absolute;
   width: 100%;
@@ -475,13 +480,10 @@ export default {
   z-index: 2;
   box-shadow: inset 0px 0px 2px 2px #f4e205;
 
-  &.tutorial-active {
-    box-shadow: inset 0 0 20px 10px #f4e205;
-  }
-
   .info {
     padding: 8px;
   }
+
   .input-group {
     display: flex;
     justify-content: center;
@@ -496,7 +498,7 @@ export default {
   }
 }
 
-.chat-controls > textarea {
+.chat-controls>textarea {
   width: 100%;
   background: black;
   border: 1px solid #f4e205;
@@ -507,7 +509,7 @@ export default {
   z-index: 1;
 }
 
-.chat-controls > button {
+.chat-controls>button {
   color: #ffffff;
   width: 40px;
   height: 40px;
