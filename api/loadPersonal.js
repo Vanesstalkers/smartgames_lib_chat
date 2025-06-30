@@ -21,7 +21,7 @@ async (context, { channelUserId }) => {
   broadcastData.lastView = Date.now();
 
   user.broadcastToSessions({
-    type: 'db/smartUpdated',
+    type: 'updateStore',
     data: { user: { [userId]: { personalChatMap: { [channelUserId]: broadcastData } } } },
   });
 

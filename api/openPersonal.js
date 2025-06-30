@@ -9,7 +9,7 @@ async (context, { id: channelUserId, name }) => {
   user.set({ personalChatMap: { [channelUserId]: { name } } });
   await user.saveChanges();
 
-  await lib.store.broadcaster.publishData(`user-${channelUserId}`, {
+  await lib.store.broadcaster.publishData.call(session, `user-${channelUserId}`, {
     personalChatMap: { [userId]: { name: user.name } },
   });
 
