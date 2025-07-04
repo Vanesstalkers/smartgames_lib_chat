@@ -333,7 +333,6 @@ export default {
     this.selectedChannel = this.defActiveChannel;
   },
   async mounted() {
-    // !!! добавить event key Enter
   },
   async beforeDestroy() {},
 };
