@@ -48,7 +48,7 @@
     </perfect-scrollbar>
     <div class="chat-controls">
       <div v-if="!userData.name" class="chat-controls-alert">
-        <div class="info">Укажите свое имя, чтобы начать писать в чат</div>
+        <div class="info">Укажи свое имя, чтобы начать писать в чат</div>
         <div class="input-group">
           <input v-model="userName" @keydown.enter="saveName" />
           <button @click="saveName" class="chat-btn">Сохранить</button>
